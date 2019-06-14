@@ -3,17 +3,14 @@ package com.yash.cvm.TeaCoffeeVendingMachine;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
-
 import static org.mockito.Mockito.doNothing;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-
 import java.util.HashMap;
 import java.util.List;
-
 import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggingEvent;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,15 +18,16 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.util.MockNameImpl;
-import org.mockito.internal.verification.Times;
 import org.mockito.runners.MockitoJUnitRunner;
-
+import com.yash.cvm.model.BlackCoffee;
+import com.yash.cvm.model.BlackTea;
+import com.yash.cvm.model.Coffee;
 import com.yash.cvm.model.InputScanner;
 import com.yash.cvm.model.Product;
-import com.yash.cvm.service.impl.ContainerOperationsImpl;
-import com.yash.cvm.service.impl.GenerateReportImpl;
-import com.yash.cvm.service.impl.PaymentImpl;
+import com.yash.cvm.model.Tea;
+import com.yash.cvm.service.ContainerOperation;
+import com.yash.cvm.service.GenerateReport;
+
 
 
 
@@ -41,25 +39,39 @@ public class OrderTest {
 
 	@Mock
 	private Product product;
+	
 
 	@Mock
-	private ContainerOperationsImpl containerOperations;
+	private ContainerOperation containerOperations;
 
-	@Mock
-	private PaymentImpl payBill;
+	/*@Mock
+	private Payment payBill;*/
 
 	@Mock
 	private InputScanner inputScanner;
 
 	@Mock
-	private GenerateReportImpl generateReportImpl;
+	private GenerateReport generateReportImpl;
 
 	@Mock
 	private Appender appenderMock;
 	
+	
+	@Mock
+	private Tea tea;
+	
+	@Mock
+	private BlackTea blackTea;
+	
+	@Mock
+	private Coffee coffee;
+	
+	@Mock
+	private BlackCoffee blackCoffee;
+	
 	@Before 
 	public void setupAppender(){
-		//appenderMock = mock(Appender.class);
+		
 		Logger.getRootLogger().addAppender(appenderMock);
 	}
 	
@@ -75,12 +87,15 @@ public class OrderTest {
 		Product product1 = new Product();
 
 		when(containerOperations.checkAvailabilty("Tea", 1, product1)).thenReturn(true);
-		when(payBill.calculatePriceForOrder("Tea", 10.0, 1, 10)).thenReturn(0.0);
+		/*when(payBill.calculatePriceForOrder("Tea", 10.0, 1, 10)).thenReturn(0.0);*/
 		doNothing().when(containerOperations).adjustContainerQuantity("Tea", 1, product1);
 		when(inputScanner.nextInt()).thenReturn(1).thenReturn(1).thenReturn(10);
-
+		
+		when(tea.getTeaPrice()).thenReturn(10.0);
+        
 		order.startMenu(product1);
-		verify(appenderMock,times(6)).doAppend(Mockito.anyObject());
+		assertTrue(containerOperations.checkAvailabilty("Tea", 1, product1));
+		verify(appenderMock,times(5)).doAppend(Mockito.anyObject());
 	}
 
 	@Test
@@ -89,14 +104,15 @@ public class OrderTest {
 		Product product1 = new Product();
 
 		when(containerOperations.checkAvailabilty("Black Tea", 1, product1)).thenReturn(true);
-		when(payBill.calculatePriceForOrder("Black Tea", 5.0, 1, 5)).thenReturn(0.0);
+		/*when(payBill.calculatePriceForOrder("Black Tea", 5.0, 1, 5)).thenReturn(0.0);*/
 		doNothing().when(containerOperations).adjustContainerQuantity("Black Tea", 1, product1);
 		when(inputScanner.nextInt()).thenReturn(2).thenReturn(1).thenReturn(5);
 
-		order.startMenu(product1);
+		when(blackTea.getBlackTeaPrice()).thenReturn(5.0);
 		
-		assertTrue(containerOperations.checkAvailabilty("Black Tea", 1, product1));
-		verify(appenderMock,times(6)).doAppend(Mockito.anyObject());
+		order.startMenu(product1);
+        assertTrue(containerOperations.checkAvailabilty("Black Tea", 1, product1));
+		verify(appenderMock,times(5)).doAppend(Mockito.anyObject());
 	}
 
 	@Test
@@ -105,14 +121,15 @@ public class OrderTest {
 		Product product1 = new Product();
 
 		when(containerOperations.checkAvailabilty("Coffee", 1, product1)).thenReturn(true);
-		when(payBill.calculatePriceForOrder("Coffee", 15.0, 1, 15)).thenReturn(0.0);
+		/*when(payBill.calculatePriceForOrder("Coffee", 15.0, 1, 15)).thenReturn(0.0);*/
 		doNothing().when(containerOperations).adjustContainerQuantity("Coffee", 1, product1);
 		when(inputScanner.nextInt()).thenReturn(3).thenReturn(1).thenReturn(15);
 
+		when(coffee.getCoffeePrice()).thenReturn(15.0);
 		order.startMenu(product1);
 
 		assertTrue(containerOperations.checkAvailabilty("Coffee", 1, product1));
-		verify(appenderMock,times(6)).doAppend(Mockito.anyObject());
+		verify(appenderMock,times(5)).doAppend(Mockito.anyObject());
 	}
 
 	@Test
@@ -121,14 +138,15 @@ public class OrderTest {
 		Product product1 = new Product();
 
 		when(containerOperations.checkAvailabilty("Black Coffee", 1, product1)).thenReturn(true);
-		when(payBill.calculatePriceForOrder("Black Coffee", 10.0, 1, 10)).thenReturn(0.0);
+		/*when(payBill.calculatePriceForOrder("Black Coffee", 10.0, 1, 10)).thenReturn(0.0);*/
 		doNothing().when(containerOperations).adjustContainerQuantity("Black Coffee", 1, product1);
 		when(inputScanner.nextInt()).thenReturn(4).thenReturn(1).thenReturn(10);
 
+		when(blackCoffee.getCoffeePrice()).thenReturn(10.0);
 		order.startMenu(product1);
 
 		assertTrue(containerOperations.checkAvailabilty("Black Coffee", 1, product1));
-		verify(appenderMock,times(6)).doAppend(Mockito.anyObject());
+		verify(appenderMock,times(5)).doAppend(Mockito.anyObject());
 	}
 
 	@Test
@@ -186,10 +204,11 @@ public class OrderTest {
 		when(inputScanner.nextInt()).thenReturn(8).thenReturn(1);
 
 		order.startMenu(product1);
+		
 		verify(appenderMock,times(4)).doAppend(Mockito.anyObject());
 	}
 
-	@Test
+	@Test 
 	public void getMenuShouldHandleExceptionWhenAvalabilityIsFalse() {
 
 		Product product1 = new Product();
@@ -202,7 +221,7 @@ public class OrderTest {
 
 		assertFalse(containerOperations.checkAvailabilty("Tea", 10, product1));
 		
-		verify(appenderMock,times(7)).doAppend(Mockito.anyObject());
+		verify(appenderMock,times(5)).doAppend(Mockito.anyObject());
 	}
 
 	@Test
@@ -224,18 +243,14 @@ public class OrderTest {
 		
 		when(inputScanner.nextInt()).thenReturn(1).thenReturn(1).thenReturn(12).thenReturn(1);
 		when(containerOperations.checkAvailabilty("Tea", 1, product1)).thenReturn(true);
-		when(payBill.calculatePriceForOrder("Tea", 10.0, 1, 12)).thenReturn(2.0);
+		/*when(payBill.calculatePriceForOrder("Tea", 10.0, 1, 12)).thenReturn(2.0);*/
 		doNothing().when(containerOperations).adjustContainerQuantity("Tea", 1, product1);
 		
 		order.startMenu(product1);
-		verify(appenderMock,times(7)).doAppend(Mockito.anyObject());
+		verify(appenderMock,times(5)).doAppend(Mockito.anyObject());
 	}
 	
-	@Test
-	public void shouldReturnorder(){
-		Order customer = new Order();
-		
-	}
+
 	
 	@Test
 	public void shouldExitFromSystemorder(){
@@ -245,7 +260,7 @@ public class OrderTest {
 		
 		order.startMenu(product1);
 		
-		verify(appenderMock,times(3)).doAppend(Mockito.anyObject());
+		verify(appenderMock,times(4)).doAppend(Mockito.anyObject());
 		
 		
 	}

@@ -8,8 +8,12 @@ public class BlackTea {
 	private Integer wastedTeaQuantity = 1;
 	private Integer wastedWaterQuantity=12;
 	private Integer WastedSugarQuantity=2;
-	private Integer blackTeaPrice=5;
+	private Double blackTeaPrice=5.0;
 	
+	
+	public Double getBlackTeaPrice() {
+		return blackTeaPrice;
+	}
 	
 	public Integer getTeaQuantity() {
 		return teaQuantity;
@@ -29,9 +33,7 @@ public class BlackTea {
 	public Integer getWastedSugarQuantity() {
 		return WastedSugarQuantity;
 	}
-	public Integer getTeaPrice() {
-		return blackTeaPrice;
-	}
+	
 	
 	
 }

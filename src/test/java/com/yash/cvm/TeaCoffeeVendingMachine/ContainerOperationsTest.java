@@ -1,10 +1,9 @@
 package com.yash.cvm.TeaCoffeeVendingMachine;
 
 
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import static org.mockito.Mockito.doNothing;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -13,17 +12,17 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.yash.cvm.model.Product;
-import com.yash.cvm.service.impl.ContainerOperationsImpl;
+import com.yash.cvm.service.ContainerOperation;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ContainerOperationsTest {
 
 	@InjectMocks
-	private ContainerOperationsImpl containerOperations;
+	private ContainerOperation containerOperations;
 
 	@Mock
 	private Product container;
@@ -65,6 +64,17 @@ public class ContainerOperationsTest {
 		assertEquals((Integer) 3, containerForCoffee.getWaterWasteAmount());
 		assertEquals((Integer) 8, containerForCoffee.getMilkWasteAmount());
 		assertEquals((Integer) 2, containerForCoffee.getSugarWasteAmount());
+
+	}
+	
+	@Test
+	public void adjustContainerQuantityShouldUpdateQuantitiesWhenOrderIsNull() {
+
+		Product containerForNull = new Product();
+
+		containerOperations.adjustContainerQuantity("", 1, containerForNull);
+
+		//doNothing().when(containerOperations).adjustContainerQuantity("", 1, containerForNull);
 
 	}
 

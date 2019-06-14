@@ -1,4 +1,4 @@
-package com.yash.cvm.service.impl;
+package com.yash.cvm.service;
 
 
 import com.yash.cvm.model.BlackCoffee;
@@ -7,7 +7,7 @@ import com.yash.cvm.model.Coffee;
 import com.yash.cvm.model.Product;
 import com.yash.cvm.model.Tea;
 
-public class ContainerOperationsImpl {
+public class ContainerOperation {
 
     Tea tea=new Tea();
     BlackTea blackTea=new BlackTea();
@@ -63,26 +63,27 @@ public class ContainerOperationsImpl {
 			product.setWaterContainerCapacity(product.getWaterContainerCapacity() - (quantity * tea.getWaterQuantity() + quantity * tea.getWastedWaterQuantity()));
 			product.setSugarContainerCapacity(product.getSugarContainerCapacity() - (quantity * tea.getSugarQuantity() + quantity * tea.getWastedSugarQuantity()));
 			product.setMilkContainerCapacity(product.getMilkContainerCapacity() - (quantity * tea.getMilkQuantity() + quantity * tea.getWastedMilkQuantity()));
-            product.setTeaWasteAmount(product.getTeaWasteAmount() + quantity * tea.getWasteedTeaQuantity());
+            
+			product.setTeaWasteAmount(product.getTeaWasteAmount() + quantity * tea.getWasteedTeaQuantity());
 			product.setWaterWasteAmount(product.getWaterWasteAmount() + quantity * tea.getWastedWaterQuantity());
 			product.setSugarWasteAmount(product.getSugarWasteAmount() + quantity * tea.getWastedSugarQuantity());
 			product.setMilkWasteAmount(product.getMilkWasteAmount() + quantity * tea.getWastedMilkQuantity());
 
 		}else if (productType.equalsIgnoreCase("Black Tea")) {
 			
-			product.setTeaContainerCapacity(product.getTeaContainerCapacity() - quantity * blackTea.getTeaQuantity());
-			product.setWaterContainerCapacity(product.getWaterContainerCapacity() - (quantity * 100 + quantity * blackTea.getWaterQuantity()));
-			product.setSugarContainerCapacity(product.getSugarContainerCapacity() - (quantity * 15 + quantity * blackTea.getSugarQuantity()));
+			product.setTeaContainerCapacity(product.getTeaContainerCapacity() - (quantity * (blackTea.getTeaQuantity()+blackTea.getWastedTeaQuantity())));
+			product.setWaterContainerCapacity(product.getWaterContainerCapacity() - (quantity *( blackTea.getWaterQuantity()+blackTea.getWastedWaterQuantity())));
+			product.setSugarContainerCapacity(product.getSugarContainerCapacity() - (quantity * ( blackTea.getSugarQuantity()+blackTea.getWastedSugarQuantity())));
 
 	
 			product.setWaterWasteAmount(product.getWaterWasteAmount() + quantity * blackTea.getWastedWaterQuantity());
 			product.setSugarWasteAmount(product.getSugarWasteAmount() + quantity * blackTea.getWastedSugarQuantity());
 			
 		}else if (productType.equalsIgnoreCase("Coffee")) {
-			product.setCoffeeContainerCapacity(product.getCoffeeContainerCapacity() - (quantity * 4 + quantity * 1));
-			product.setMilkContainerCapacity(product.getMilkContainerCapacity() - (quantity * 80 + quantity * 8));
-			product.setSugarContainerCapacity(product.getSugarContainerCapacity() - (quantity * 15 + quantity * 2));
-			product.setWaterContainerCapacity(product.getWaterContainerCapacity() - (quantity * 20 + quantity * 3));
+			product.setCoffeeContainerCapacity(product.getCoffeeContainerCapacity() - (quantity * (coffee.getCoffeeQuantity()+coffee.getWasteedCoffeeQuantity())));
+			product.setMilkContainerCapacity(product.getMilkContainerCapacity() - (quantity * (coffee.getMilkQuantity()+coffee.getWastedMilkQuantity())));
+			product.setSugarContainerCapacity(product.getSugarContainerCapacity() - (quantity * (coffee.getSugarQuantity()+coffee.getWastedSugarQuantity())));
+			product.setWaterContainerCapacity(product.getWaterContainerCapacity() - (quantity * (coffee.getWaterQuantity()+coffee.getWastedWaterQuantity())));
 
 			product.setCoffeeWasteAmount(product.getCoffeeWasteAmount() + quantity * 1);
 			product.setMilkWasteAmount(product.getMilkWasteAmount() + quantity * 8);
@@ -90,24 +91,25 @@ public class ContainerOperationsImpl {
 			product.setWaterWasteAmount(product.getWaterWasteAmount() + quantity * 3);
 
 		} else if (productType.equalsIgnoreCase("Black Coffee")) {
-			product.setCoffeeContainerCapacity(product.getCoffeeContainerCapacity() - quantity * 3);
-			product.setSugarContainerCapacity(product.getSugarContainerCapacity() - (quantity * 15 + quantity * 2));
-			product.setWaterContainerCapacity(product.getWaterContainerCapacity() - (quantity * 100 + quantity * 12));
+			product.setCoffeeContainerCapacity(product.getCoffeeContainerCapacity() - (quantity * blackCoffee.getCoffeeQuantity()+blackCoffee.getWasteedCoffeeQuantity() ));
+			product.setSugarContainerCapacity(product.getSugarContainerCapacity() - (quantity * (blackCoffee.getSugarQuantity()+blackCoffee.getWastedSugarQuantity())));
+			product.setWaterContainerCapacity(product.getWaterContainerCapacity() - (quantity * (blackCoffee.getWaterQuantity()+blackCoffee.getWastedWaterQuantity())));
 
 			product.setSugarWasteAmount(product.getSugarWasteAmount() + quantity * 2);
 			product.setWaterWasteAmount(product.getWaterWasteAmount() + quantity * 12);
 
 		}
+		
 
 	}
 
 	public void resetContainer(Product product) {
 
-		product.setTeaContainerCapacity(2000);
-		product.setCoffeeContainerCapacity(2000);
-		product.setMilkContainerCapacity(10000);
-		product.setWaterContainerCapacity(15000);
-		product.setSugarContainerCapacity(8000);
+		product.setTeaContainerCapacity(product.getTeaContainerCapacity());
+		product.setCoffeeContainerCapacity(product.getCoffeeContainerCapacity());
+		product.setMilkContainerCapacity(product.getMilkContainerCapacity());
+		product.setWaterContainerCapacity(product.getWaterContainerCapacity());
+		product.setSugarContainerCapacity(product.getSugarContainerCapacity());
 		System.out.println("All Containers successfully Reset");
 
 	}

@@ -10,7 +10,7 @@ public class Coffee {
 	private Integer wastedWaterQuantity=3;
 	private Integer wastedMilkQuantity=8;
 	private Integer WastedSugarQuantity=2;
-	private Integer coffeePrice=15;
+	private double coffeePrice=15.0;
 
 	public Integer getCoffeeQuantity() {
 		return coffeeQuantity;
@@ -36,7 +36,7 @@ public class Coffee {
 	public Integer getWastedSugarQuantity() {
 		return WastedSugarQuantity;
 	}
-	public Integer getCoffeePrice() {
+	public double getCoffeePrice() {
 		return coffeePrice;
 	}
 	

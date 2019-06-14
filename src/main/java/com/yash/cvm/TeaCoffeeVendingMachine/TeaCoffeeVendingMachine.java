@@ -5,11 +5,11 @@ import com.yash.cvm.model.Product;
 public class TeaCoffeeVendingMachine {
 
 	private static Order order=new Order();
-	private static  Product container=new Product();
+	private static  Product product=new Product();
 	
 	
 	public static void main(String[] args) {
 		
-		 order.startMenu(container);
+		 order.startMenu(product);
 	}
 }

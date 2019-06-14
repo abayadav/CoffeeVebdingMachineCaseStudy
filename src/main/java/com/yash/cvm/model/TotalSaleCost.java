@@ -2,6 +2,19 @@ package com.yash.cvm.model;
 
 public class TotalSaleCost {
 
+	public TotalSaleCost() {
+		super();
+		
+	}
+
+	public TotalSaleCost(int productID, String productName, int quantity, double cost) {
+		super();
+		this.productID = productID;
+		this.productName = productName;
+		this.quantity = quantity;
+		this.cost = cost;
+	}
+
 	int productID;
 	String productName;
 	int quantity = 0;

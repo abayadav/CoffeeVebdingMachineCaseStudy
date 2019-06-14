@@ -11,15 +11,13 @@ public class Tea {
 	private Integer wastedWaterQuantity=5;
 	private Integer wastedMilkQuantity=4;
 	private Integer WastedSugarQuantity=2;
-	private Integer teaPrice=10;
+	private Double teaPrice=10.0;
 	
-	public Integer getTeaPrice() {
+	public Double getTeaPrice() {
 		return teaPrice;
 	}
 
-	public void setTeaPrice(Integer teaPrice) {
-		this.teaPrice = teaPrice;
-	}
+	
 
 	public Tea() {
 		

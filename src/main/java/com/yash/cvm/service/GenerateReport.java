@@ -1,26 +1,27 @@
-package com.yash.cvm.service.impl;
+package com.yash.cvm.service;
 
 
 import java.util.HashMap;
 import java.util.List;
-
+import org.apache.log4j.Logger;
 import com.yash.cvm.model.Product;
 import com.yash.cvm.model.TotalSaleCost;
 
-
-public class GenerateReportImpl {
+public class GenerateReport {
 	
 	
-
+	private final static Logger logger = Logger.getLogger(GenerateReport.class);
 	
-	public GenerateReportImpl() {
+	ContainerOperation containerOperation=new ContainerOperation();
+	
+	public GenerateReport() {
 		
 	}
 
 	public void prepareReport(Product product, HashMap<String, List> totalSale, Integer totalQuantitySold,
 			Double totalPrice) {
 
-		System.out.println("*****Tea-Cofee Sold*********");
+		logger.info("*****Tea-Cofee Sold*********");
 		List<TotalSaleCost> totalSaleCost = totalSale.get("total_Sale_Cost");
 		for (TotalSaleCost e : totalSaleCost) {
 			System.out.println(e.getProductName() + ":" + e.getQuantity() + "cup :" + e.getCost());
@@ -36,7 +37,10 @@ public class GenerateReportImpl {
 		System.out.println("Water:" + product.getWaterContainerCapacity());
 		System.out.println("Milk:" + product.getMilkContainerCapacity());
 		System.out.println("Sugar:" + product.getSugarContainerCapacity());
-
+		
+		
+		//containerOperation.checkContainerStatus(product);
+		
 		System.out.println("****Waste Of Products****");
 		System.out.println("Tea Wasted:" + product.getTeaWasteAmount());
 		System.out.println("Coffee Wasted:" + product.getCoffeeWasteAmount());

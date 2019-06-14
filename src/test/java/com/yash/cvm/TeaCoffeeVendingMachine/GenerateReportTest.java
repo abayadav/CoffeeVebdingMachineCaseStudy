@@ -3,6 +3,7 @@ package com.yash.cvm.TeaCoffeeVendingMachine;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,24 +18,33 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.yash.cvm.model.Product;
 import com.yash.cvm.model.TotalSaleCost;
-import com.yash.cvm.service.impl.GenerateReportImpl;
+import com.yash.cvm.service.ContainerOperation;
+import com.yash.cvm.service.GenerateReport;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GenerateReportTest {
 
 	@InjectMocks
-	private GenerateReportImpl generateReport;
+	private GenerateReport generateReport;
 
 	@Mock
 	private Product product;
 
 	@Mock
 	private TotalSaleCost totalSaleCost;
+	
+	@Mock
+	private ContainerOperation containerOperation;
 
 	@Test
 	public void shouldGenerateReport() {
 
-		GenerateReportImpl report = Mockito.mock(GenerateReportImpl.class);
+		GenerateReport report = Mockito.mock(GenerateReport.class);
+		
+		//Product p1=new Product();
+		
+		
+		//doNothing().when(containerOperation).checkContainerStatus(product);
 		
 		TotalSaleCost totalCost = new TotalSaleCost();
 		totalCost.setProductID(1);
@@ -49,8 +59,7 @@ public class GenerateReportTest {
 		
 		totalSale.put("total_Sale_Cost", totalSaleCostList);
 
-		//doNothing().when(report.prepareReport(product, totalSale,10,10.0));
-		
+
 		doCallRealMethod().when(report).prepareReport(product, totalSale,10,10.0);
 
 		report.prepareReport(product, totalSale,10,10.0);

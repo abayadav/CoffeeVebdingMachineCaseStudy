@@ -6,14 +6,16 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.yash.cvm.model.BlackCoffee;
 import com.yash.cvm.model.BlackTea;
+import com.yash.cvm.model.Coffee;
 import com.yash.cvm.model.InputScanner;
 import com.yash.cvm.model.Product;
 import com.yash.cvm.model.Tea;
 import com.yash.cvm.model.TotalSaleCost;
-import com.yash.cvm.service.impl.ContainerOperationsImpl;
-import com.yash.cvm.service.impl.GenerateReportImpl;
-import com.yash.cvm.service.impl.PaymentImpl;
+import com.yash.cvm.service.ContainerOperation;
+import com.yash.cvm.service.GenerateReport;
+
 
 public class Order {
 	
@@ -22,52 +24,46 @@ public class Order {
 	
 	private Integer totalQuantitySold = 0;
     private Double total = 0.0;
-    private Integer insertedAmount = 0;
-    private Double returnedAmount = 0.0;
+   
+ 
     private Integer refillOption = 0;
     
-    HashMap<String, List> totalSalePercontainer = new HashMap<String, List>();
+    HashMap<String, List> totalSalePercontainer = new HashMap<String,List>();
     List<TotalSaleCost> totalSaleCostList = new ArrayList<TotalSaleCost>();
 	
     InputScanner inputScanner = new InputScanner();
-    ContainerOperationsImpl containerOperations = new ContainerOperationsImpl();
-    GenerateReportImpl generateReport = new GenerateReportImpl();
-	PaymentImpl payBill = new PaymentImpl();
+    ContainerOperation containerOperations = new ContainerOperation();
+    GenerateReport generateReport = new GenerateReport();
+	
 
 	
     Tea tea=new Tea();
     BlackTea blackTea=new BlackTea();
+    Coffee coffee=new Coffee();
+    BlackCoffee blackCoffee=new BlackCoffee();
     
     public Order(){
     	
     }
     
-    public Order(ContainerOperationsImpl containerOperations, InputScanner inputScanner, Tea tea) {
-		super();
-		this.containerOperations = containerOperations;
-		this.generateReport = generateReport;
-		this.payBill = payBill;
-		this.inputScanner = inputScanner;
-		this.tea=tea;
-		this.blackTea=blackTea;
-	}
-   
-	
+
 	public void startMenu(Product product) {
 		
 		logger.info("Welcome");
-		
-		logger.info("1.Tea \n2.Black Tea \n3.Coffee \n4.Black Coffee \n5.Reset Container \n6.Refill Container \n7.Check Container Status \n8.Report \n9.Exit");
-		
+	
 		int askUser;
 		
 		do {
+			
+
+			logger.info("1.Tea \n2.Black Tea \n3.Coffee \n4.Black Coffee \n5.Reset Container \n6.Refill Container \n7.Check Container Status \n8.Report \n9.Exit");
+			
 			int quantityOfOrder = 0;
-			System.out.println("Please enter the order number");
+			System.out.println("Please enter the order number:");
 			int selectedOrder = inputScanner.nextInt();
 			
 			if(selectedOrder<=4){
-				System.out.println("Please enter the quantity required");
+				System.out.println("Please enter the quantity required:");
 				quantityOfOrder= inputScanner.nextInt();
 			}
 			
@@ -75,26 +71,27 @@ public class Order {
 			case 1:
 				logger.info("You have ordered " + quantityOfOrder + " tea");
 				prepareOrder("Tea",tea.getTeaPrice(), quantityOfOrder, product);
+				
 				break;
 	
 				
 			case 2:
 				
 				logger.info("You have ordered " + quantityOfOrder + " black tea");
-				prepareOrder("Black Tea",blackTea.getTeaPrice(), quantityOfOrder, product);
+				prepareOrder("Black Tea",blackTea.getBlackTeaPrice(), quantityOfOrder, product);
 				
 				break;
 
 			case 3:
 				
 				logger.info("You have ordered " + quantityOfOrder + " coffee");
-				prepareOrder("Coffee", 15.0, quantityOfOrder, product);
+				prepareOrder("Coffee", coffee.getCoffeePrice(), quantityOfOrder, product);
 				break;
 			
 			case 4:
-				//System.out.println("You have ordered " + quantityOfOrder + " black coffee");
+				
 				logger.info("You have ordered " + quantityOfOrder + " black coffee");
-				prepareOrder("Black Coffee", 10.0, quantityOfOrder, product);
+				prepareOrder("Black Coffee",blackCoffee.getCoffeePrice(), quantityOfOrder, product);
 				break;
 		
 			case 5:
@@ -115,7 +112,7 @@ public class Order {
 			
 			case 8:
 				
-				logger.info("################Report################");
+				logger.info("****Report****");
 				generateReport.prepareReport(product, totalSalePercontainer, totalQuantitySold, total);
 				break;
 			
@@ -139,38 +136,31 @@ public class Order {
 
 
 
-	public void prepareOrder(String orderType, double costPerCup, int orderQuantity, Product product) {
+	public void prepareOrder(String orderType, double costPerUnit, int quantity, Product product) {
 		try {
 			
-			if (containerOperations.checkAvailabilty(orderType, orderQuantity, product)) {
-				int amount_flag = 0;
-				do {
-					System.out.println("Please enter " + costPerCup * orderQuantity + " Rupee:");
+			if (containerOperations.checkAvailabilty(orderType, quantity, product)) {
 
-					insertedAmount = inputScanner.nextInt();
-					
-					if (insertedAmount >= costPerCup * orderQuantity) {
-						amount_flag = 1;
-						returnedAmount = payBill.calculatePriceForOrder(orderType, costPerCup, orderQuantity,
-								insertedAmount);
-
-						containerOperations.adjustContainerQuantity(orderType, orderQuantity, product);
-
+						containerOperations.adjustContainerQuantity(orderType, quantity, product);
+                        
+						logger.info("Drink successfully Prepared");
+		               
+						totalQuantitySold = totalQuantitySold + quantity;
+						total = total + costPerUnit * quantity;
 						
-						logger.info("Drink successfully served using logger");
 						
-						if (Math.abs(returnedAmount) > 0.0)
-							
-							logger.info("Please collect your change:" + Math.abs(returnedAmount));
+						totalSaleCostList.add(new TotalSaleCost(1, "Tea", 0, 0.0));
+						totalSaleCostList.add(new TotalSaleCost(2, "Black Tea", 0, 0.0));
+						totalSaleCostList.add(new TotalSaleCost(3, "Coffee", 0, 0.0));
+						totalSaleCostList.add(new TotalSaleCost(4, "Black Coffee", 0, 0.0));
 						
-						totalQuantitySold = totalQuantitySold + orderQuantity;
-						total = total + costPerCup * orderQuantity;
-
-						for (TotalSaleCost totalCost : totalSaleCostList) {
+						
+                       	for (TotalSaleCost totalCost : totalSaleCostList) {
 							if (totalCost.getProductName().equals(orderType)) {
+								
 								TotalSaleCost totalSaleCost = new TotalSaleCost();
-								totalSaleCost.setCost(totalCost.getCost() + orderQuantity * costPerCup);
-								totalSaleCost.setQuantity(totalCost.getQuantity() + orderQuantity);
+								totalSaleCost.setCost(totalCost.getCost() + quantity * costPerUnit);
+								totalSaleCost.setQuantity(totalCost.getQuantity() + quantity);
 								totalSaleCost.setProductName(totalCost.getProductName());
 								totalSaleCost.setProductID(totalCost.getProductID());
 
@@ -182,9 +172,7 @@ public class Order {
 
 						totalSalePercontainer.put("total_Sale_Cost", totalSaleCostList);
 					}
-				} while (amount_flag == 0);
-
-			} else {
+		 else {
 				throw new RuntimeException();
 			}
 		}
@@ -192,8 +180,6 @@ public class Order {
 		catch (RuntimeException e) {
 			
 			logger.error("Requested quantity not available, Please try again!");
-			
-			
 
 		}
 
